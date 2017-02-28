@@ -11,6 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+
+import br.com.g2soft.g2web.util.ErrorMessages;
 
 @Entity
 public class Client implements Serializable {
@@ -21,15 +24,19 @@ public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@NotNull(message = ErrorMessages.CODE_PROPERTY_NOT_NULL)
 	private Integer code;
 	
+	@NotNull(message = ErrorMessages.NAME_PROPERTY_NOT_NULL)
 	private String name;
 	
+	@NotNull(message = ErrorMessages.FANTASY_NAME_PROPERTY_NOT_NULL)
 	private String fantasyName;
 	
+	@NotNull(message = ErrorMessages.EMAIL_PROPERTY_NOT_NULL)
 	private String email;
 	
 	private String fatherName;

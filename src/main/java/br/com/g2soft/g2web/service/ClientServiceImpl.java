@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.g2soft.g2web.domain.Address;
 import br.com.g2soft.g2web.domain.Client;
+import br.com.g2soft.g2web.generic.EventException;
 import br.com.g2soft.g2web.domain.Bunch;
 import br.com.g2soft.g2web.repository.ClientRepository;
+import br.com.g2soft.g2web.util.ErrorMessages;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -21,9 +24,13 @@ public class ClientServiceImpl implements ClientService {
 		return repository.save(client);
 	}
 
-	public Client updateClient(Integer clientId, Client client) {
+	public Client updateClient(Integer clientId, Client client) throws EventException {
 		
 		Client clientDB = repository.findOne(clientId);
+		
+		if (clientDB == null) {
+			throw new EventException(ErrorMessages.CLIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+		}
 		
 		clientDB.setCode(client.getCode());
 		clientDB.setName(client.getName());
@@ -43,28 +50,50 @@ public class ClientServiceImpl implements ClientService {
 		return repository.save(clientDB);
 	}
 	
-	public Client getClient(Integer clientId) {		
-		return repository.findOne(clientId);
+	public Client view(Integer clientId) throws EventException {
+		
+		Client clientDB = repository.findOne(clientId);
+		
+		if (clientDB == null) {
+			throw new EventException(ErrorMessages.CLIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+		}
+		
+		return clientDB;
 	}
 
 	public List<Client> listClients() {		
 		return (ArrayList<Client>) repository.findAll();
 	}
 
-	public List<Address> listAddresses(Integer clientId) {
-		
-		return repository.findOne(clientId).getAddresses();
-	}
-
-	public List<Bunch> listGroups(Integer clientId) {
-		
-//		return repository.findOne(clientId).getGroups();
-		return null;
-	}
-
-	public Client deleteClient(Integer clientId) {
+	public List<Address> listAddresses(Integer clientId) throws EventException {
 		
 		Client clientDB = repository.findOne(clientId);
+		
+		if (clientDB == null) {
+			throw new EventException(ErrorMessages.CLIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+		}
+		
+		return clientDB.getAddresses();
+	}
+
+	public List<Bunch> listBunches(Integer clientId) throws EventException {
+		
+		Client clientDB = repository.findOne(clientId);
+		
+		if (clientDB == null) {
+			throw new EventException(ErrorMessages.CLIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+		}
+		
+		return clientDB.getBunches();
+	}
+
+	public Client deleteClient(Integer clientId) throws EventException {
+		
+		Client clientDB = repository.findOne(clientId);
+		
+		if (clientDB == null) {
+			throw new EventException(ErrorMessages.CLIENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+		}
 		
 		repository.delete(clientDB);
 		

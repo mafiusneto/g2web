@@ -11,63 +11,57 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.g2soft.g2web.domain.Address;
+import br.com.g2soft.g2web.domain.Bunch;
 import br.com.g2soft.g2web.domain.Client;
-import br.com.g2soft.g2web.service.ClientServiceImpl;
+import br.com.g2soft.g2web.generic.EventException;
+import br.com.g2soft.g2web.service.ClientService;
 import br.com.g2soft.g2web.util.Constants;
 
 @Controller
-@RequestMapping(path=Constants.URL_CLIENT)
+@RequestMapping(path = Constants.URL_CLIENT)
 public class ClientController {
 
 	@Autowired
-	private ClientServiceImpl service;
+	private ClientService service;
 	
-	/*@ResponseBody
-	@RequestMapping(method=RequestMethod.GET)
-	public String test() {
-		
-		return "Teste";
-	}*/
-	
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody Client  createClient(@RequestBody Client client) {
 		
 		return service.createClient(client);
 	}
 	
 	@RequestMapping(path = Constants.CLIENT_ID, method = RequestMethod.PUT)
-	public @ResponseBody Client updateClient(@RequestParam Integer clientId, @RequestBody Client client) {
+	public @ResponseBody Client updateClient(@RequestParam Integer clientId, @RequestBody Client client) throws EventException {
 		
 		return service.updateClient(clientId, client);
 	}
-	/*@RequestMapping(method=RequestMethod.GET)
-	public @ResponseBody List<Client> listClients() {
-		
-		List<Client> clients = (List<Client>) clientRepository.findAll();
-		
-		return clients;
-	}*/
 	
-	@RequestMapping(path=Constants.CLIENT_ID, method=RequestMethod.GET)	
-	public @ResponseBody Client viewClient(@RequestParam Integer clientId) {
+	@RequestMapping(path = Constants.CLIENT_ID, method = RequestMethod.GET)	
+	public @ResponseBody Client viewClient(@RequestParam Integer clientId) throws EventException {
 		
-		return service.getClient(clientId);
+		return service.view(clientId);
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody List<Client> listClients() {
 	
 		return service.listClients();
 	}
 	
-	@RequestMapping(path=Constants.URL_ADDRESS, method=RequestMethod.GET)
-	public @ResponseBody List<Address> listAddresses(@RequestParam Integer clientId) {
+	@RequestMapping(path = Constants.URL_CLIENT_ADDRESS, method = RequestMethod.GET)
+	public @ResponseBody List<Address> listAddresses(@RequestParam Integer clientId) throws EventException {
 		
 		return service.listAddresses(clientId);
 	}
 	
-	@RequestMapping(path=Constants.CLIENT_ID, method = RequestMethod.DELETE)
-	public @ResponseBody Client deleteClient(@RequestParam Integer clientId) {
+	@RequestMapping(path = Constants.URL_CLIENT_BUNCH, method = RequestMethod.GET)
+	public @ResponseBody List<Bunch> listBunches(@RequestParam Integer clientId) throws EventException {
+		
+		return service.listBunches(clientId);
+	}
+	
+	@RequestMapping(path = Constants.CLIENT_ID, method = RequestMethod.DELETE)
+	public @ResponseBody Client deleteClient(@RequestParam Integer clientId) throws EventException {
 		
 		return service.deleteClient(clientId);
 	}
